@@ -7,7 +7,7 @@ on:
 
 env:
   AWS_REGION: eu-west-2
-  ECR_REPOSITORY: tech-showcase/porfolio
+  ECR_REPOSITORY: tech-showcase/portfolio
   ECS_SERVICE: portfolio
   ECS_CLUSTER: wonderful-flamingo-2s93s1
   ECS_TASK_DEFINITION: portfolio
