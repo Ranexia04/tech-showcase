@@ -5,9 +5,3 @@ services:
       - "8080:80"
     volumes:
       - ./src:/usr/share/nginx/html:ro
-    depends_on:
-      - nginx-exporter
-
-  nginx-exporter:
-    image: nginx/nginx-prometheus-exporter:latest
-    command: -nginx.scrape-uri=http://nginx:80/stub_status
