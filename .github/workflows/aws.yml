@@ -36,6 +36,8 @@ jobs:
         echo "$EC2_KEY" > deploy-key
         chmod 400 deploy-key
         scp -i deploy-key -o StrictHostKeyChecking=no docker-compose.yml $EC2_USER@$EC2_HOST:~/docker-compose.yml
+        echo "ECR_REGISTRY: $ECR_REGISTRY\nECR_REPOSITORY: $ECR_REPOSITORY\nIMAGE_TAG: $IMAGE_TAG" > .env
+        scp -i deploy-key -o StrictHostKeyChecking=no .env $EC2_USER@$EC2_HOST:~/.env
         ssh -i deploy-key -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
           sudo docker compose up -d
         EOF
