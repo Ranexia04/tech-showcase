@@ -1,45 +1,58 @@
 name: Deploy to EC2
+
 on:
   push:
     branches:
       - main
+
 env:
-  ECR_REPOSITORY: tech-showcase/portfolio
-  IMAGE_TAG: latest
+  AWS_REGION: eu-west-2
+  ECR_REPOSITORY: tech-showcase/porfolio
+  ECS_SERVICE: portfolio
+  ECS_CLUSTER: wonderful-flamingo-2s93s1
+  ECS_TASK_DEFINITION: portfolio
+  CONTAINER_NAME: portfolio
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: eu-west-2
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
-    - name: Build, tag, and push image to Amazon ECR
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-      run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-    - name: Deploy to EC2
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        EC2_HOST: ${{ secrets.EC2_HOST }}
-        EC2_USER: ubuntu
-        EC2_KEY: ${{ secrets.EC2_SSH_KEY }}
-      run: |
-        echo "$EC2_KEY" > deploy-key
-        chmod 400 deploy-key
-        scp -i deploy-key -o StrictHostKeyChecking=no docker-compose.yml $EC2_USER@$EC2_HOST:~/docker-compose.yml
-        echo -e "ECR_REGISTRY: $ECR_REGISTRY\nECR_REPOSITORY: $ECR_REPOSITORY\nIMAGE_TAG: $IMAGE_TAG" > .env
-        cat .env
-        scp -i deploy-key -o StrictHostKeyChecking=no .env $EC2_USER@$EC2_HOST:~/.env
-        ssh -i deploy-key -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
-          aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
-          sudo docker compose up -d
-        EOF
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition
+        with:
+          task-definition: ${{ env.ECS_TASK_DEFINITION }}
+          container-name: ${{ env.CONTAINER_NAME }}
+          image: ${{ steps.build-image.outputs.image }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
