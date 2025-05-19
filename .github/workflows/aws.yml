@@ -10,7 +10,6 @@ env:
   ECR_REPOSITORY: tech-showcase/portfolio
   ECS_SERVICE: portfolio
   ECS_CLUSTER: wonderful-flamingo-2s93s1
-  ECS_TASK_DEFINITION: portfolio
   CONTAINER_NAME: portfolio
 
 jobs:
