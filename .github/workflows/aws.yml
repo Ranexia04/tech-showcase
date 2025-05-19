@@ -35,5 +35,5 @@ jobs:
         chmod 400 deploy-key
         scp -i deploy-key -o StrictHostKeyChecking=no docker-compose.yml $EC2_USER@$EC2_HOST:~/docker-compose.yml
         ssh -i deploy-key -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
-          docker compose up -d
+          sudo docker compose up -d
         EOF
