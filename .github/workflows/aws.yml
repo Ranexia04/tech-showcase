@@ -28,12 +28,12 @@ jobs:
     - name: Deploy to EC2
       env:
         EC2_HOST: ${{ secrets.EC2_HOST }}
-        EC2_USER: ec2-user
+        EC2_USER: ubuntu
         EC2_KEY: ${{ secrets.EC2_SSH_KEY }}
       run: |
+        echo "$EC2_KEY" > deploy-key
+        chmod 400 deploy-key
         scp -i deploy-key -o StrictHostKeyChecking=no docker-compose.yml $EC2_USER@$EC2_HOST:~/docker-compose.yml
         ssh -i deploy-key -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
-          aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin 385185534929.dkr.ecr.eu-west-2.amazonaws.com
-          docker-compose -f ~/docker-compose.yml pull
           docker-compose -f ~/docker-compose.yml up -d
         EOF
