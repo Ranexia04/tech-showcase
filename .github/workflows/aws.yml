@@ -40,5 +40,6 @@ jobs:
         cat .env
         scp -i deploy-key -o StrictHostKeyChecking=no .env $EC2_USER@$EC2_HOST:~/.env
         ssh -i deploy-key -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
+          aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
           sudo docker compose up -d
         EOF
