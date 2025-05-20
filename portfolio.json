@@ -1,14 +1,21 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:eu-west-2:385185534929:task-definition/portfolio:1",
+    "taskDefinitionArn": "arn:aws:ecs:eu-west-2:385185534929:task-definition/portfolio:3",
     "containerDefinitions": [
         {
             "name": "portfolio",
-            "image": "tech-showcase/portfolio",
+            "image": "385185534929.dkr.ecr.eu-west-2.amazonaws.com/tech-showcase/portfolio:cebfdbb0f9a42916b0b97563c76aa7b1ee800ea4",
             "cpu": 0,
-            "portMappings": [],
+            "portMappings": [
+                {
+                    "name": "http",
+                    "containerPort": 80,
+                    "hostPort": 80,
+                    "protocol": "tcp",
+                    "appProtocol": "http2"
+                }
+            ],
             "essential": true,
             "environment": [],
-            "environmentFiles": [],
             "mountPoints": [],
             "volumesFrom": [],
             "systemControls": []
@@ -17,10 +24,16 @@
     "family": "portfolio",
     "executionRoleArn": "arn:aws:iam::385185534929:role/ecsTaskExecutionRole",
     "networkMode": "awsvpc",
-    "revision": 1,
+    "revision": 3,
     "volumes": [],
     "status": "ACTIVE",
     "requiresAttributes": [
+        {
+            "name": "com.amazonaws.ecs.capability.ecr-auth"
+        },
+        {
+            "name": "ecs.capability.execution-role-ecr-pull"
+        },
         {
             "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
         },
@@ -33,14 +46,13 @@
         "EC2",
         "FARGATE"
     ],
-    "requiresCompatibilities": [],
     "cpu": "1024",
     "memory": "3072",
     "runtimePlatform": {
         "cpuArchitecture": "X86_64",
         "operatingSystemFamily": "LINUX"
     },
-    "registeredAt": "2025-05-19T15:39:07.637Z",
+    "registeredAt": "2025-05-20T08:52:27.570Z",
     "registeredBy": "arn:aws:iam::385185534929:root",
     "enableFaultInjection": false,
     "tags": []
