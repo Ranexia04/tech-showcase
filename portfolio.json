@@ -1,9 +1,9 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:eu-west-2:385185534929:task-definition/portfolio:3",
+    "taskDefinitionArn": "arn:aws:ecs:eu-west-2:385185534929:task-definition/portfolio:5",
     "containerDefinitions": [
         {
             "name": "portfolio",
-            "image": "385185534929.dkr.ecr.eu-west-2.amazonaws.com/tech-showcase/portfolio:cebfdbb0f9a42916b0b97563c76aa7b1ee800ea4",
+            "image": "385185534929.dkr.ecr.eu-west-2.amazonaws.com/tech-showcase/portfolio:4efce4f3320608de5df896d34379fd6285c9cc4b",
             "cpu": 0,
             "portMappings": [
                 {
@@ -11,7 +11,7 @@
                     "containerPort": 80,
                     "hostPort": 80,
                     "protocol": "tcp",
-                    "appProtocol": "http2"
+                    "appProtocol": "http"
                 }
             ],
             "essential": true,
@@ -24,7 +24,7 @@
     "family": "portfolio",
     "executionRoleArn": "arn:aws:iam::385185534929:role/ecsTaskExecutionRole",
     "networkMode": "awsvpc",
-    "revision": 3,
+    "revision": 5,
     "volumes": [],
     "status": "ACTIVE",
     "requiresAttributes": [
@@ -52,7 +52,7 @@
         "cpuArchitecture": "X86_64",
         "operatingSystemFamily": "LINUX"
     },
-    "registeredAt": "2025-05-20T08:52:27.570Z",
+    "registeredAt": "2025-05-20T09:18:13.225Z",
     "registeredBy": "arn:aws:iam::385185534929:root",
     "enableFaultInjection": false,
     "tags": []
