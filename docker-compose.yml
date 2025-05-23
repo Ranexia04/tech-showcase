@@ -1,5 +1,12 @@
 services:
-  nginx:
-    image: ${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}
+  frontend:
+    image: frontend:0.1
+    build: ./frontend
     ports:
-      - "80:80"
+      - "5173:5173"
+
+  backend:
+    image: backend:0.1
+    build: ./backend
+    ports:
+     - "8000:8000"
