@@ -1,0 +1,9 @@
+apiVersion: v2
+name: portfolio
+description: A Helm chart for showcasing my Software Engineering, DevOps and Site Reliability Engineering skills.
+
+type: application
+
+version: 0.1.0
+
+appVersion: "0.1.0"

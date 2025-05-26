@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "portfolio.frontendFullname" . }}
+  labels:
+    {{- include "portfolio.frontendLabels" . | nindent 4 }}
+spec:
+  type: {{ .Values.frontend.service.type }}
+  ports:
+    - port: {{ .Values.frontend.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "portfolio.frontendSelectorLabels" . | nindent 4 }}
