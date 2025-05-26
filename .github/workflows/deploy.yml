@@ -1,0 +1,29 @@
+name: Deploy to OCI Kubernetes
+
+on:
+  workflow_run:
+    workflows: [ "Build Docker Images" ]
+    types: [ completed ]
+    branches: [ main ]
+
+jobs:
+  deploy_oke:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+    #   - name: Install kubectl
+    #     run: |
+    #       curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+    #       chmod +x kubectl
+    #       sudo mv kubectl /usr/local/bin/
+
+    #   - name: Deploy to OKE
+    #     run: |
+    #       echo "${{ secrets.KUBECONFIG }}" > kubeconfig.yaml
+    #       export KUBECONFIG=kubeconfig.yaml
+    #       kubectl apply -f frontend.yaml -f backend.yaml -f db.yaml
+    #     env:
+    #       KUBECONFIG: kubeconfig.yaml
