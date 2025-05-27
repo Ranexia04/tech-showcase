@@ -14,16 +14,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-    #   - name: Install kubectl
-    #     run: |
-    #       curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-    #       chmod +x kubectl
-    #       sudo mv kubectl /usr/local/bin/
-
-    #   - name: Deploy to OKE
-    #     run: |
-    #       echo "${{ secrets.KUBECONFIG }}" > kubeconfig.yaml
-    #       export KUBECONFIG=kubeconfig.yaml
-    #       kubectl apply -f frontend.yaml -f backend.yaml -f db.yaml
-    #     env:
-    #       KUBECONFIG: kubeconfig.yaml
+      - name: Deploy Portfolio Helm Chart
+        uses: 'deliverybot/helm@v1'
+        with:
+          release: 'portfolio'
+          namespace: 'portfolio'
+          chart: './charts/portfolio'
+          # token: '${{ github.token }}'
+        env:
+          KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
