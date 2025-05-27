@@ -42,7 +42,7 @@ spec:
           imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.frontend.service.port }}
+              containerPort: 5173
               protocol: TCP
           {{- with .Values.frontend.livenessProbe }}
           livenessProbe:

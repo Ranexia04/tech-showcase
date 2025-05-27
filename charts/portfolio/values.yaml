@@ -27,7 +27,7 @@ frontend:
 
   service:
     type: LoadBalancer
-    port: 5173
+    port: 80
 
   ingress:
     enabled: true
