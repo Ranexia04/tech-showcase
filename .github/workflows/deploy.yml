@@ -30,11 +30,13 @@ jobs:
 
       - name: Generate OCI config file
         run: |
+          touch $HOME/.oci/oci_api_key.pem
           cat << EOF > $HOME/.oci/oci_api_key.pem
           ${{ secrets.OCI_CLI_KEY_CONTENT }}
           EOF
           chmod 600 $HOME/.oci/oci_api_key.pem
-          
+
+          touch $HOME/.oci/config
           cat << EOF > $HOME/.oci/config
           [DEFAULT]
           user=${{ secrets.OCI_CLI_USER }}
