@@ -30,7 +30,7 @@ frontend:
     port: 80
 
   ingress:
-    enabled: false
+    enabled: true
     className: ""
     annotations: {}
     hosts:
@@ -43,13 +43,13 @@ frontend:
   resources: {}
 
   livenessProbe:
-    httpGet:
-      path: /
-      port: http
+    # httpGet:
+    #   path: /
+    #   port: http
   readinessProbe:
-    httpGet:
-      path: /
-      port: http
+    # httpGet:
+    #   path: /
+    #   port: http
 
   autoscaling:
     enabled: false
@@ -92,13 +92,13 @@ backend:
   resources: {}
 
   livenessProbe:
-    httpGet:
-      path: /
-      port: http
+    # httpGet:
+    #   path: /
+    #   port: http
   readinessProbe:
-    httpGet:
-      path: /
-      port: http
+    # httpGet:
+    #   path: /
+    #   port: http
 
   autoscaling:
     enabled: false
