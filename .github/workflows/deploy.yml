@@ -25,6 +25,8 @@ jobs:
 
       - name: Install oci dependency
         uses: oracle-actions/run-oci-cli-command@v1.3.2
+        with:
+          command: --help
 
       - run: |
           helm upgrade --install --namespace portfolio portfolio ./charts/portfolio
