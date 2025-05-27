@@ -29,8 +29,8 @@ jobs:
           OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
 
       - run: pwd
-      - run: ls -l .oci
-      - run: ls -l .kube
+      - run: ls -l /home/runner/.oci
+      - run: ls -l /home/runner/.kube
 
       - name: Deploy portfolio Helm Chart
         run: |
