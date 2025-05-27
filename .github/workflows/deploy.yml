@@ -16,3 +16,12 @@ jobs:
 
       - uses: azure/setup-helm@v4.3.0
         id: install
+
+      - uses: azure/k8s-set-context@v4
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBECONFIG }}
+          context: context-c6vtj65lwcq
+
+      - run: |
+          helm upgrade --install --namespace portfolio portfolio ./charts/portfolio
