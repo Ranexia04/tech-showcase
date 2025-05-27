@@ -28,7 +28,21 @@ jobs:
           OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
           OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
 
-      - run: ls -l /home/runner/.kube
+      - name: Generate OCI config file
+        run: |
+          cat << EOF > $HOME/.oci/oci_api_key.pem
+          ${{ secrets.OCI_CLI_KEY_CONTENT }}
+          EOF
+          chmod 600 $HOME/.oci/config
+          cat << EOF > $HOME/.oci/config
+          [DEFAULT]
+          user=${{ secrets.OCI_CLI_USER }}
+          fingerprint=${{ secrets.OCI_CLI_FINGERPRINT }}
+          tenancy=${{ secrets.OCI_CLI_TENANCY }}
+          region=${{ secrets.OCI_CLI_REGION }}
+          key_file=$HOME/.oci/oci_api_key.pem
+          EOF
+          chmod 600 $HOME/.oci/config
 
       - name: Deploy portfolio Helm Chart
         run: |
