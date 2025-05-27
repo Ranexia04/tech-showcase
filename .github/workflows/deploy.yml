@@ -23,5 +23,8 @@ jobs:
           kubeconfig: ${{ secrets.KUBECONFIG }}
           context: context-c6vtj65lwcq
 
+      - name: Install oci dependency
+        uses: oracle-actions/run-oci-cli-command@v1.3.2
+
       - run: |
           helm upgrade --install --namespace portfolio portfolio ./charts/portfolio
