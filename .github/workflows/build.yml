@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build_images:
+  build-frontend:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     env:
@@ -22,14 +22,29 @@ jobs:
       - name: Log in to OCI Registry
         run: docker login ${{ env.OCI_REGISTRY }} -u '${{ secrets.OCI_NAMESPACE }}/${{ secrets.OCI_USERNAME }}' -p '${{ secrets.OCI_AUTH_TOKEN }}'
 
-      - name: Build and push frontend
-        run: |
-          cd frontend
-          docker build -t ${{ env.OCI_REGISTRY }}/${{ secrets.OCI_NAMESPACE }}/portfolio-frontend:latest .
-          docker push ${{ env.OCI_REGISTRY }}/${{ secrets.OCI_NAMESPACE }}/portfolio-frontend:latest
+      - name: Build Frontend
+        run: docker build -t ${{ env.OCI_REGISTRY }}/${{ secrets.OCI_NAMESPACE }}/portfolio-frontend:latest frontend
 
-      - name: Build and push backend
-        run: |
-          cd backend
-          docker build -t ${{ env.OCI_REGISTRY }}/${{ secrets.OCI_NAMESPACE }}/portfolio-backend:latest .
-          docker push ${{ env.OCI_REGISTRY }}/${{ secrets.OCI_NAMESPACE }}/portfolio-backend:latest
+      - name: Push Frontend
+        run: docker push ${{ env.OCI_REGISTRY }}/${{ secrets.OCI_NAMESPACE }}/portfolio-frontend:latest
+
+  build-backend:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    env:
+      OCI_REGISTRY: eu-madrid-1.ocir.io
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to OCI Registry
+        run: docker login ${{ env.OCI_REGISTRY }} -u '${{ secrets.OCI_NAMESPACE }}/${{ secrets.OCI_USERNAME }}' -p '${{ secrets.OCI_AUTH_TOKEN }}'
+
+      - name: Build Backend
+        run: docker build -t ${{ env.OCI_REGISTRY }}/${{ secrets.OCI_NAMESPACE }}/portfolio-backend:latest backend
+
+      - name: Push Backend
+        run: docker push ${{ env.OCI_REGISTRY }}/${{ secrets.OCI_NAMESPACE }}/portfolio-backend:latest

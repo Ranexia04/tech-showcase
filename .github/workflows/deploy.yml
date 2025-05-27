@@ -28,6 +28,7 @@ jobs:
           OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
           OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
 
+      - run: pwd
       - run: ls -l .oci
       - run: ls -l .kube
 
